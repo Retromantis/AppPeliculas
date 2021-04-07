@@ -12,13 +12,11 @@ import com.retromantis.apppeliculas.model.Result
 class PeliculasAdapter(val peliculas:List<Result>):RecyclerView.Adapter<PeliculasAdapter.PeliculasHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeliculasHolder {
-        println(">>> onCreateViewHolder")
         val layoutInflater = LayoutInflater.from(parent.context)
         return PeliculasHolder(layoutInflater.inflate(R.layout.item_peliculas, parent, false))
     }
 
     override fun onBindViewHolder(holder: PeliculasHolder, position: Int) {
-        println(">>> onBindViewHolder " + position)
         holder.render(peliculas[position])
     }
 
@@ -30,7 +28,6 @@ class PeliculasAdapter(val peliculas:List<Result>):RecyclerView.Adapter<Pelicula
 
         fun render(pelicula:Result) {
             binding.tvPelicula.text = pelicula.title
-            println(">>> " + pelicula.title)
         }
     }
 

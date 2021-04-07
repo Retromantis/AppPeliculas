@@ -2,9 +2,9 @@ package com.retromantis.apppeliculas.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.retromantis.apppeliculas.R
 import com.retromantis.apppeliculas.app.APIService
 import com.retromantis.apppeliculas.app.PeliculasAdapter
 import com.retromantis.apppeliculas.databinding.ActivityPeliculasBinding
@@ -20,7 +20,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class PeliculasActivity : AppCompatActivity() {
 
     private val BASE_URL = "https://api.themoviedb.org/3/movie/"
-//    private val API_KEY  = "f46b58478f489737ad5a4651a4b25079"
     private val API_KEY  = "ec52c6bb69d5e9dddab334efe8f45e96"
 
     private lateinit var binding:ActivityPeliculasBinding
@@ -28,26 +27,32 @@ class PeliculasActivity : AppCompatActivity() {
     private lateinit var adapter: PeliculasAdapter
     private val peliculas = mutableListOf<Result>()
 
+    private var pagina_actual:Int = 1
+    private var total_paginas:Int = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPeliculasBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btAnterior.setOnClickListener {
+            if(pagina_actual > 1) {
+                cargarPagina(pagina_actual - 1)
+            }
+        }
+        binding.btSiguiente.setOnClickListener {
+            if(pagina_actual < total_paginas) {
+                cargarPagina(pagina_actual + 1)
+            }
+        }
+
         initRecyclerView()
         initApiService()
 
-        cargarPeliculas(3)
+        cargarPagina(pagina_actual)
     }
 
-//    private fun getRetrofit(): Retrofit {
-//        return Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build()
-//    }
-
     private fun initRecyclerView() {
-        println(">>> initRecyclerView")
         adapter = PeliculasAdapter(peliculas)
         binding.rvPeliculas.layoutManager = LinearLayoutManager(this)
         binding.rvPeliculas.adapter = adapter
@@ -61,16 +66,18 @@ class PeliculasActivity : AppCompatActivity() {
         apiService = retrofit.create(APIService::class.java)
     }
 
-    private fun cargarPeliculas(pagina: Int) {
+    private fun cargarPagina(pagina: Int) {
         CoroutineScope(Dispatchers.IO).launch  {
             val call: Response<PeliculasResponse> = apiService.getPeliculas(pagina, API_KEY).execute()
             val response:PeliculasResponse? = call.body()
             runOnUiThread() {
                 if(call.isSuccessful) {
+                    total_paginas = response?.total_pages ?: 1
+                    actualizarPagina(pagina)
+
                     peliculas.clear()
                     peliculas.addAll(response?.results ?: emptyList())
                     adapter.notifyDataSetChanged()
-                    println(">>> " + peliculas.size + " >>> " + peliculas[0].title ?: ">>> empty")
                 } else {
                     peliculas.clear()
                     adapter.notifyDataSetChanged()
@@ -83,4 +90,21 @@ class PeliculasActivity : AppCompatActivity() {
     private fun showErrorDialog() {
         Toast.makeText(this, "Ocurrio un erro!",Toast.LENGTH_SHORT).show()
     }
+
+    private fun actualizarPagina(pagina:Int) {
+        pagina_actual = pagina
+
+        binding.tvPagina.text = "Página " + pagina_actual + " de " + total_paginas
+        if(pagina_actual == 1) {
+            binding.btAnterior.visibility = View.INVISIBLE
+        } else {
+            binding.btAnterior.visibility = View.VISIBLE
+        }
+        if(pagina_actual == total_paginas) {
+            binding.btSiguiente.visibility = View.INVISIBLE
+        } else {
+            binding.btSiguiente.visibility = View.VISIBLE
+        }
+    }
+
 }
