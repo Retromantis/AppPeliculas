@@ -107,4 +107,6 @@ class PeliculasActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {}
+
 }
