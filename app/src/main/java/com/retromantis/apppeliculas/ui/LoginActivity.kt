@@ -23,21 +23,21 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun verificarCampos() {
-        val user     = binding.etUsuario.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
-
-        if(user.isEmpty() || password.isEmpty()) {
-            showToast("Complete los campos")
-            return
-        }
-        if(!user.equals("Admin")) {
-            showToast("Usuario Incorrecto")
-            return
-        }
-        if(!password.equals("Password*123")) {
-            showToast("Password Incorrecto")
-            return
-        }
+//        val user     = binding.etUsuario.text.toString().trim()
+//        val password = binding.etPassword.text.toString().trim()
+//
+//        if(user.isEmpty() || password.isEmpty()) {
+//            showToast("Complete los campos")
+//            return
+//        }
+//        if(!user.equals("Admin")) {
+//            showToast("Usuario Incorrecto")
+//            return
+//        }
+//        if(!password.equals("Password*123")) {
+//            showToast("Password Incorrecto")
+//            return
+//        }
 
         startActivity(Intent(this, PeliculasActivity::class.java))
     }

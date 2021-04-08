@@ -1,15 +1,17 @@
 package com.retromantis.apppeliculas.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.retromantis.apppeliculas.app.APIService
+import com.retromantis.apppeliculas.app.App
 import com.retromantis.apppeliculas.app.PeliculasAdapter
 import com.retromantis.apppeliculas.databinding.ActivityPeliculasBinding
 import com.retromantis.apppeliculas.model.PeliculasResponse
-import com.retromantis.apppeliculas.model.Result
+import com.retromantis.apppeliculas.model.Pelicula
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +27,7 @@ class PeliculasActivity : AppCompatActivity() {
     private lateinit var binding:ActivityPeliculasBinding
     private lateinit var apiService: APIService
     private lateinit var adapter: PeliculasAdapter
-    private val peliculas = mutableListOf<Result>()
+    private val peliculas = mutableListOf<Pelicula>()
 
     private var pagina_actual:Int = 1
     private var total_paginas:Int = 1
@@ -54,6 +56,10 @@ class PeliculasActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         adapter = PeliculasAdapter(peliculas)
+        adapter.setOnClickListener {
+            App.pelicula = peliculas.get(binding.rvPeliculas.getChildAdapterPosition(it))
+            startActivity(Intent(this, DetallesActivity::class.java))
+        }
         binding.rvPeliculas.layoutManager = LinearLayoutManager(this)
         binding.rvPeliculas.adapter = adapter
     }
@@ -108,5 +114,4 @@ class PeliculasActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {}
-
 }

@@ -11,7 +11,6 @@
     <TextView
         android:id="@+id/tvPagina"
         android:layout_gravity="center_horizontal"
-        android:text="Página: 1"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="20sp"
@@ -40,7 +39,7 @@
 
         <Button
             android:id="@+id/btAnterior"
-            android:text="Anterior"
+            android:text="@string/peliculas_anterior"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:textAllCaps="false"
@@ -52,7 +51,7 @@
         <Button
             android:layout_marginStart="40dp"
             android:id="@+id/btSiguiente"
-            android:text="Siguiente"
+            android:text="@string/peliculas_siguiente"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:textAllCaps="false"
